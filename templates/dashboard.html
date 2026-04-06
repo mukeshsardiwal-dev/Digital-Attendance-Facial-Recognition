@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Digital Attendance System</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      :root {
+        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --light-bg: #f8f9fa;
+        --border-color: #e9ecef;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        background-color: var(--light-bg);
+      }
+
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 250px;
+        height: 100vh;
+        background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px 20px;
+        overflow-y: auto;
+        z-index: 1000;
+      }
+
+      .sidebar-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 40px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .sidebar-brand h5 {
+        margin: 0;
+        font-weight: 700;
+        font-size: 18px;
+      }
+
+      .sidebar-menu {
+        list-style: none;
+      }
+
+      .sidebar-menu li {
+        margin: 10px 0;
+      }
+
+      .sidebar-menu a {
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 15px;
+        border-radius: 8px;
+        transition: all 0.3s;
+      }
+
+      .sidebar-menu a:hover,
+      .sidebar-menu a.active {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+      }
+
+      .sidebar-menu a.active {
+        background: rgba(255, 255, 255, 0.3);
+        border-left: 4px solid white;
+      }
+
+      .main-content {
+        margin-left: 250px;
+        padding: 30px;
+      }
+
+      .topbar {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .topbar-greeting {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .topbar-greeting h3 {
+        margin: 0;
+        color: #333;
+        font-size: 22px;
+        font-weight: 600;
+      }
+
+      .topbar-actions {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+      }
+
+      .profile-menu {
+        position: relative;
+      }
+
+      .profile-btn {
+        background: white;
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+        padding: 8px 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 600;
+        color: #333;
+        transition: all 0.3s;
+      }
+
+      .profile-btn:hover {
+        border-color: #667eea;
+        color: #667eea;
+      }
+
+      .profile-dropdown {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: white;
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+        margin-top: 8px;
+        min-width: 200px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        display: none;
+        z-index: 100;
+      }
+
+      .profile-dropdown.show {
+        display: block;
+      }
+
+      .profile-dropdown a,
+      .profile-dropdown button {
+        display: block;
+        width: 100%;
+        padding: 12px 15px;
+        border: none;
+        background: none;
+        text-align: left;
+        cursor: pointer;
+        color: #333;
+        transition: all 0.2s;
+        font-size: 14px;
+      }
+
+      .profile-dropdown a:hover,
+      .profile-dropdown button:hover {
+        background: var(--light-bg);
+        color: #667eea;
+      }
+
+      .profile-dropdown button.logout {
+        color: #dc3545;
+        border-top: 1px solid var(--border-color);
+      }
+
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .stat-card {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+      }
+
+      .stat-icon {
+        font-size: 32px;
+        color: #667eea;
+        margin-bottom: 12px;
+      }
+
+      .stat-value {
+        font-size: 28px;
+        font-weight: 700;
+        color: #333;
+        margin: 8px 0;
+      }
+
+      .stat-label {
+        font-size: 14px;
+        color: #999;
+      }
+
+      .chart-container {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        margin-bottom: 30px;
+      }
+
+      .chart-container h5 {
+        margin-bottom: 20px;
+        color: #333;
+        font-weight: 600;
+      }
+
+      .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+      }
+
+      .action-btn {
+        background: white;
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+        color: #333;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .action-btn:hover {
+        border-color: #667eea;
+        background: #f8f9ff;
+        color: #667eea;
+      }
+
+      .action-btn i {
+        font-size: 28px;
+      }
+
+      .action-btn p {
+        margin: 0;
+        font-weight: 600;
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 200px;
+        }
+
+        .main-content {
+          margin-left: 200px;
+          padding: 15px;
+        }
+
+        .topbar {
+          flex-direction: column;
+          gap: 15px;
+        }
+
+        .dashboard-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: relative;
+        }
+
+        .main-content {
+          margin-left: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-brand">
+        <i class="fas fa-smile"></i>
+        <h5>AttendanceAI</h5>
+      </div>
+
+      <ul class="sidebar-menu">
+        <li>
+          <a
+            href="#dashboard"
+            class="nav-link active"
+            onclick="switchPage('dashboard')"
+            ><i class="fas fa-chart-line"></i> Dashboard</a
+          >
+        </li>
+        <li>
+          <a
+            href="#attendance"
+            class="nav-link"
+            onclick="switchPage('attendance')"
+            ><i class="fas fa-fingerprint"></i> Mark Attendance</a
+          >
+        </li>
+        <li>
+          <a href="#records" class="nav-link" onclick="switchPage('records')"
+            ><i class="fas fa-list"></i> Records</a
+          >
+        </li>
+        <li>
+          <a href="#students" class="nav-link" onclick="switchPage('students')"
+            ><i class="fas fa-users"></i> Students</a
+          >
+        </li>
+        <li>
+          <a href="#settings" class="nav-link" onclick="switchPage('settings')"
+            ><i class="fas fa-cog"></i> Settings</a
+          >
+        </li>
+        <li>
+          <a href="#help" class="nav-link" onclick="switchPage('help')"
+            ><i class="fas fa-question-circle"></i> Help</a
+          >
+        </li>
+      </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Topbar -->
+      <div class="topbar">
+        <div class="topbar-greeting">
+          <i
+            class="fas fa-face-smile"
+            style="font-size: 28px; color: #667eea"
+          ></i>
+          <div>
+            <h3>Welcome, <span id="userName">User</span>!</h3>
+            <small style="color: #999">Have a great day ahead</small>
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <div class="profile-menu">
+            <button class="profile-btn" onclick="toggleProfileMenu()">
+              <i class="fas fa-user-circle"></i>
+              <span id="userInitials">U</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="profile-dropdown" id="profileDropdown">
+              <a href="#profile" onclick="switchPage('profile')"
+                ><i class="fas fa-user"></i> My Profile</a
+              >
+              <a href="#security" onclick="switchPage('security')"
+                ><i class="fas fa-lock"></i> Security</a
+              >
+              <button onclick="logoutUser()" class="logout">
+                <i class="fas fa-sign-out-alt"></i> Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashboard Page -->
+      <div id="dashboard-page" class="page-content">
+        <div class="dashboard-grid">
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-chart-bar"></i></div>
+            <div class="stat-value" id="totalAttendance">0</div>
+            <div class="stat-label">Total Attendance Today</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-users"></i></div>
+            <div class="stat-value" id="totalStudents">0</div>
+            <div class="stat-label">Total Students</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-percent"></i></div>
+            <div class="stat-value" id="attendanceRate">0%</div>
+            <div class="stat-label">Attendance Rate</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-clock"></i></div>
+            <div class="stat-value" id="lastUpdate">--:--</div>
+            <div class="stat-label">Last Update</div>
+          </div>
+        </div>
+
+        <div class="chart-container">
+          <h5>Attendance Trends (Last 30 Days)</h5>
+          <canvas id="attendanceChart"></canvas>
+        </div>
+
+        <h5 style="margin-bottom: 20px; color: #333; font-weight: 600">
+          Quick Actions
+        </h5>
+        <div class="quick-actions">
+          <a href="#" class="action-btn" onclick="switchPage('attendance')">
+            <i class="fas fa-fingerprint"></i>
+            <p>Mark Attendance</p>
+          </a>
+          <a href="#" class="action-btn" onclick="switchPage('records')">
+            <i class="fas fa-file-alt"></i>
+            <p>View Records</p>
+          </a>
+          <a href="#" class="action-btn" onclick="switchPage('students')">
+            <i class="fas fa-user-plus"></i>
+            <p>Add Student</p>
+          </a>
+          <a href="#" class="action-btn" onclick="switchPage('settings')">
+            <i class="fas fa-sliders-h"></i>
+            <p>Settings</p>
+          </a>
+        </div>
+      </div>
+
+      <!-- Other Pages (Placeholder) -->
+      <div id="attendance-page" class="page-content" style="display: none">
+        <h4>Mark Attendance</h4>
+        <p>Attendance marking interface would go here</p>
+      </div>
+
+      <div id="records-page" class="page-content" style="display: none">
+        <h4>Attendance Records</h4>
+        <p>Records view would go here</p>
+      </div>
+
+      <div id="students-page" class="page-content" style="display: none">
+        <h4>Students Management</h4>
+        <p>Student management interface would go here</p>
+      </div>
+
+      <div id="settings-page" class="page-content" style="display: none">
+        <h4>Settings</h4>
+        <p>Settings interface would go here</p>
+      </div>
+
+      <div id="help-page" class="page-content" style="display: none">
+        <h4>Help & Support</h4>
+        <p>Help documentation would go here</p>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      let chart = null;
+
+      // Initialize Dashboard
+      document.addEventListener("DOMContentLoaded", async () => {
+        await loadUserProfile();
+        await loadDashboardStats();
+        setupChart();
+      });
+
+      async function loadUserProfile() {
+        try {
+          const token = localStorage.getItem("token");
+          const response = await fetch("/api/user/profile", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          const data = await response.json();
+
+          document.getElementById("userName").textContent =
+            data.full_name || data.username;
+          const initials = data.full_name
+            .split(" ")
+            .map((n) => n[0])
+            .join("")
+            .toUpperCase();
+          document.getElementById("userInitials").textContent = initials;
+        } catch (error) {
+          console.error("Error loading profile:", error);
+        }
+      }
+
+      async function loadDashboardStats() {
+        try {
+          const response = await fetch("/attendance_stats");
+          const data = await response.json();
+
+          // Update last date count
+          if (data.counts && data.counts.length > 0) {
+            document.getElementById("totalAttendance").textContent =
+              data.counts[data.counts.length - 1];
+          }
+
+          // Update last update time
+          const now = new Date();
+          document.getElementById("lastUpdate").textContent =
+            now.toLocaleTimeString();
+        } catch (error) {
+          console.error("Error loading stats:", error);
+        }
+      }
+
+      function setupChart() {
+        fetch("/attendance_stats")
+          .then((r) => r.json())
+          .then((data) => {
+            const ctx = document
+              .getElementById("attendanceChart")
+              .getContext("2d");
+            chart = new Chart(ctx, {
+              type: "bar",
+              data: {
+                labels: data.dates,
+                datasets: [
+                  {
+                    label: "Attendance Count",
+                    data: data.counts,
+                    backgroundColor: "rgba(102, 126, 234, 0.7)",
+                    borderColor: "#667eea",
+                    borderWidth: 2,
+                    borderRadius: 6,
+                    hoverBackgroundColor: "rgba(102, 126, 234, 0.9)",
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: { display: false },
+                },
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    ticks: { callback: (value) => value },
+                  },
+                },
+              },
+            });
+          });
+      }
+
+      function switchPage(page) {
+        // Hide all pages
+        document
+          .querySelectorAll(".page-content")
+          .forEach((el) => (el.style.display = "none"));
+
+        // Show selected page
+        document.getElementById(`${page}-page`).style.display = "block";
+
+        // Update sidebar active state
+        document
+          .querySelectorAll(".sidebar-menu a")
+          .forEach((a) => a.classList.remove("active"));
+        event.target.closest("a").classList.add("active");
+      }
+
+      function toggleProfileMenu() {
+        const dropdown = document.getElementById("profileDropdown");
+        dropdown.classList.toggle("show");
+
+        document.addEventListener(
+          "click",
+          (e) => {
+            if (!e.target.closest(".profile-menu")) {
+              dropdown.classList.remove("show");
+            }
+          },
+          { once: true },
+        );
+      }
+
+      function logoutUser() {
+        if (confirm("Are you sure you want to logout?")) {
+          const token = localStorage.getItem("token");
+          fetch("/logout", {
+            method: "POST",
+            headers: { Authorization: `Bearer ${token}` },
+          }).then(() => {
+            localStorage.removeItem("token");
+            window.location.href = "/login";
+          });
+        }
+      }
+
+      // Refresh stats every 30 seconds
+      setInterval(loadDashboardStats, 30000);
+    </script>
+  </body>
+</html>

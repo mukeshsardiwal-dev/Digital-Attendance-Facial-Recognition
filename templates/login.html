@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Digital Attendance System - Login</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        height: 100%;
+        font-family:
+          "Segoe UI",
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .login-container {
+        width: 100%;
+        max-width: 500px;
+      }
+
+      .login-card {
+        background: #ffffff;
+        border-radius: 24px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+        padding: 48px 40px;
+        animation: slideUp 0.4s ease-out;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .login-header {
+        text-align: center;
+        margin-bottom: 36px;
+      }
+
+      .login-header h1 {
+        font-size: 32px;
+        font-weight: 700;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 8px;
+        letter-spacing: -0.5px;
+      }
+
+      .login-header p {
+        color: #999;
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+      }
+
+      .progress-steps {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 32px;
+        gap: 8px;
+      }
+
+      .step {
+        flex: 1;
+        height: 4px;
+        background: #e5e7eb;
+        border-radius: 2px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .step.active {
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+      }
+
+      .step.completed {
+        background: #667eea;
+      }
+
+      .form-section {
+        display: none;
+      }
+
+      .form-section.active {
+        display: block;
+        animation: fadeIn 0.3s ease-in;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .step-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 24px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      .step-title i {
+        color: #667eea;
+        font-size: 20px;
+      }
+
+      .form-group {
+        margin-bottom: 18px;
+      }
+
+      .form-label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 8px;
+      }
+
+      .form-control {
+        width: 100%;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 12px 14px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        background: #f9fafb;
+      }
+
+      .form-control:focus {
+        background: #ffffff;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        outline: none;
+      }
+
+      .form-control::placeholder {
+        color: #9ca3af;
+      }
+
+      .btn {
+        border: none;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 15px;
+        padding: 12px 24px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        width: 100%;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        margin-top: 8px;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 24px rgba(102, 126, 234, 0.3);
+      }
+
+      .btn-primary:active {
+        transform: translateY(0);
+      }
+
+      .btn-secondary {
+        background: #f3f4f6;
+        border: 2px solid #e5e7eb;
+        color: #374151;
+        margin-top: 10px;
+        font-weight: 600;
+      }
+
+      .btn-secondary:hover {
+        background: #e5e7eb;
+        border-color: #d1d5db;
+      }
+
+      .alert {
+        border-radius: 12px;
+        border: none;
+        margin-bottom: 20px;
+        font-size: 14px;
+        padding: 12px 14px;
+        animation: slideDown 0.2s ease-out;
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .alert-success {
+        background: #ecfdf5;
+        color: #065f46;
+        border-left: 4px solid #10b981;
+      }
+
+      .alert-danger {
+        background: #fef2f2;
+        color: #991b1b;
+        border-left: 4px solid #ef4444;
+      }
+
+      .otp-input-group {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 24px;
+        justify-content: center;
+      }
+
+      .otp-input {
+        width: 50px;
+        height: 50px;
+        text-align: center;
+        font-size: 24px;
+        font-weight: 700;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        background: #f9fafb;
+      }
+
+      .otp-input:focus {
+        background: #ffffff;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        outline: none;
+      }
+
+      .otp-input::-webkit-outer-spin-button,
+      .otp-input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      .video-container {
+        position: relative;
+        width: 100%;
+        background: #000;
+        border-radius: 16px;
+        overflow: hidden;
+        margin-bottom: 18px;
+        aspect-ratio: 4/3;
+      }
+
+      #facialVideo {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      .facial-instruction {
+        text-align: center;
+        padding: 12px;
+        background: #f0f4ff;
+        border-radius: 10px;
+        color: #667eea;
+        font-size: 13px;
+        font-weight: 500;
+        margin-bottom: 18px;
+      }
+
+      .signup-link {
+        text-align: center;
+        margin-top: 18px;
+        color: #666;
+        font-size: 14px;
+      }
+
+      .signup-link a {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s ease;
+      }
+
+      .signup-link a:hover {
+        color: #764ba2;
+        text-decoration: underline;
+      }
+
+      .form-text {
+        font-size: 12px;
+        color: #999;
+        margin-top: 6px;
+      }
+
+      .text-muted {
+        color: #9ca3af;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 600px) {
+        .login-card {
+          padding: 36px 24px;
+        }
+
+        .login-header h1 {
+          font-size: 26px;
+        }
+
+        .otp-input {
+          width: 45px;
+          height: 45px;
+          font-size: 20px;
+        }
+
+        .otp-input-group {
+          gap: 8px;
+        }
+
+        .btn {
+          padding: 11px 20px;
+          font-size: 14px;
+        }
+
+        .step-title {
+          font-size: 16px;
+          margin-bottom: 20px;
+        }
+      }
+
+      @media (max-width: 400px) {
+        .login-container {
+          padding: 10px;
+        }
+
+        .login-card {
+          padding: 28px 18px;
+          border-radius: 18px;
+        }
+
+        .login-header h1 {
+          font-size: 24px;
+        }
+
+        .login-header p {
+          font-size: 12px;
+        }
+
+        .otp-input {
+          width: 40px;
+          height: 40px;
+          font-size: 18px;
+        }
+
+        .otp-input-group {
+          gap: 6px;
+        }
+
+        .progress-steps {
+          margin-bottom: 24px;
+        }
+
+        .form-group {
+          margin-bottom: 14px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="login-card">
+        <!-- Login Header -->
+        <div class="login-header">
+          <h1><i class="fas fa-face-smile"></i> Digital Attendance</h1>
+          <p>3FA Secure Login</p>
+        </div>
+
+        <!-- Progress Steps -->
+        <div class="progress-steps">
+          <div class="step active" id="step1"></div>
+          <div class="step" id="step2"></div>
+          <div class="step" id="step3"></div>
+        </div>
+
+        <!-- Step 1: Username & Password -->
+        <div class="form-section active" id="section1">
+          <div class="step-title">
+            <i class="fas fa-lock"></i> Step 1: Credentials
+          </div>
+          <div id="alertSection1"></div>
+          <form id="form1" onsubmit="handleStep1(event)">
+            <div class="form-group">
+              <label class="form-label">Username</label>
+              <input
+                type="text"
+                class="form-control"
+                id="username"
+                placeholder="Enter your username"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Password</label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                placeholder="Enter your password"
+                required
+              />
+            </div>
+            <button type="submit" class="btn btn-primary">
+              Next <i class="fas fa-arrow-right ms-2"></i>
+            </button>
+          </form>
+          <div class="signup-link">
+            Don't have an account? <a href="/register">Sign Up</a>
+          </div>
+        </div>
+
+        <!-- Step 2: OTP -->
+        <div class="form-section" id="section2">
+          <div class="step-title">
+            <i class="fas fa-envelope"></i> Step 2: Email OTP
+          </div>
+          <div id="alertSection2"></div>
+          <p class="text-center text-muted mb-3">
+            Enter the 6-digit code sent to your email
+          </p>
+          <form id="form2" onsubmit="handleStep2(event)">
+            <div class="otp-input-group">
+              <input
+                type="text"
+                class="otp-input"
+                maxlength="1"
+                placeholder="0"
+              />
+              <input
+                type="text"
+                class="otp-input"
+                maxlength="1"
+                placeholder="0"
+              />
+              <input
+                type="text"
+                class="otp-input"
+                maxlength="1"
+                placeholder="0"
+              />
+              <input
+                type="text"
+                class="otp-input"
+                maxlength="1"
+                placeholder="0"
+              />
+              <input
+                type="text"
+                class="otp-input"
+                maxlength="1"
+                placeholder="0"
+              />
+              <input
+                type="text"
+                class="otp-input"
+                maxlength="1"
+                placeholder="0"
+              />
+            </div>
+            <input type="hidden" id="otpCode" />
+            <button type="submit" class="btn btn-primary">Verify OTP</button>
+            <button type="button" class="btn btn-secondary" onclick="goBack(1)">
+              Back
+            </button>
+            <p class="text-center text-muted mt-3 small">
+              Didn't receive? <a href="#">Resend</a>
+            </p>
+          </form>
+        </div>
+
+        <!-- Step 3: Facial Recognition -->
+        <div class="form-section" id="section3">
+          <div class="step-title">
+            <i class="fas fa-face-smile"></i> Step 3: Facial Recognition
+          </div>
+          <div id="alertSection3"></div>
+          <form id="form3" onsubmit="handleStep3(event)">
+            <div class="video-container">
+              <video id="facialVideo" autoplay muted playsinline></video>
+            </div>
+            <div class="facial-instruction">
+              <i class="fas fa-info-circle"></i> Position your face in the
+              camera frame
+            </div>
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick="captureFacialImage()"
+            >
+              <i class="fas fa-camera"></i> Capture Face
+            </button>
+            <button type="button" class="btn btn-secondary" onclick="goBack(2)">
+              Back
+            </button>
+          </form>
+        </div>
+
+        <!-- Hidden canvas for facial capture -->
+        <canvas id="facialCanvas" style="display: none"></canvas>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+  </body>
+</html>
