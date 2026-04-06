@@ -1,0 +1,34 @@
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.1",
+  "base_commit_sha": "d9467a6c164d396a8643df54fb2c065c67b521d8",
+  "prompts": {
+    "83bce2f06071cbd3": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "c6066c85-0578-42b1-8b82-864cf221ce93",
+        "model": "unknown"
+      },
+      "human_author": "Mukesh Sardiwal",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 3934,
+      "overriden_lines": 0
+    },
+    "a39c37be4a0ebbdc": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "1f6f500d-35b3-4821-91bd-ce9d478ecf17",
+        "model": "unknown"
+      },
+      "human_author": "Mukesh Sardiwal",
+      "messages": [],
+      "total_additions": 1720,
+      "total_deletions": 0,
+      "accepted_lines": 3249,
+      "overriden_lines": 7
+    }
+  }
+}
